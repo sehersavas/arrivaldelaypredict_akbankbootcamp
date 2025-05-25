@@ -1,4 +1,4 @@
-#  Uçak Varış Gecikmeleri Sınıflandırması Tahmin Modellemesi | Supervised ML Projesi***
+#  ***Uçak Varış Gecikmeleri Sınıflandırması Tahmin Modellemesi | Supervised ML Projesi***
 
 # PROJE HAKKINDA
 Bu projede, ABD iç hat uçuşlarına ait 1936758 satır, 30 sütundan oluşan veri seti kullanılarak uçuşların varış gecikmeleri sınıflandırılmış ve tahmin modeli üretilmiştir. Amaç, çeşitli gecikme nedenlerini (hava durumu, kalkış gecikmesi, havayolu kaynaklı gecikme vb.) analiz ederek uçuşların zamanında, az gecikmeli, orta veya yüksek düzeyde gecikmeli olacağı önceden tahmin edilebilmesi hedeflenmektedir.
@@ -417,7 +417,7 @@ Weighted average’ın accuracy ile neredeyse aynı çıkması, modelin sınıf 
 
 Sonuç olarak, bağımsız değişkenlere bağlı olan uçak varış gecikmelerinin kategorik olarak tahminine ilişkin modelin başarılı çalıştığı gözlenmiştir.
 
-#*SONUÇ VE GELECEK ÇALIŞMALAR*
+# *SONUÇ VE GELECEK ÇALIŞMALAR*
 Projede, uçuş varış gecikmelerini sınıflandırmak üzere Logistic Regression algoritması ile temel bir sınıflandırma modeli geliştirilmiş ve model metriklere göre yüksek performans sergilemiştir. Ancak, gerçek dünya uygulamalarında daha yüksek başarı, genelleme ve dayanıklılık için projenin bazı yönleri geliştirilmeye açıktır.
 
 Projede yalnızca var olan sütunlar kullanılmıştır. Ancak modele harici bilgiler de entegre edilebilir, örneğin yoğunluk verileri (havaalanı bazında saatlik uçuş yoğunluğu), mevsimsel ve tatil bilgileri (bayramlar, resmi tatiller, sezonluk yoğunluk) benzeri. Bu tür ek bilgiler modele bağlamsal anlam katar ve tahmin doğruluğunu artırabilir.
