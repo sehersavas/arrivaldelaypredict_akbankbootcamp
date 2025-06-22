@@ -8,61 +8,56 @@ Veri Setinde Bulunan Özellikler (Features):
 
 Veri, Kaggle üzerinden csv formatında indirilmiş, Pandas kullanılarak Jupyter Notebook'ta DataFrame’e aktarılmıştır:
 
+```python
+
 import pandas as pd
-
 df = pd.read_csv("/Users/sehersavas/Desktop/DelayedFlights.csv")
-
 df.head()
-
+```
 Veri setinde toplam 1.936.758 satır ve 30 sütun bulunmaktadır. Yaklaşık 690.000 satırda eksik veri vardır, eksik veri temizleme işlemi gerekmektedir. UniqueCarrier (hava yolu kodu), TailNum (uçak kuyruk numarası), Origin (kalkış havaalanı kodu) ,Dest (varış havaalanı kodu),CancellationCode (iptal sebebi) (object), geri kalan veriler sayısal formdadır. Veri Ön İşleme esnasında gerekli dönüşümler yapılacaktır.
 
 # Veri Temizliği - Eksik Veri Olan Satırların Temizlenmesi
 
+```pyhton
 df_cleaned = df.dropna()
-
 print("Yeni veri kümesinin boyutu:", df_cleaned.shape)
-
-
-
+```
 Yeni veri kümesinin boyutu: (1247486, 30)
 Veri setinde eksik veri bulunan satırlar temizlendikten sonra veriseti 1.247.486 satır ve 30 sütundan oluşmaktadır.
 
 # Keşifsel Veri Analizi- Hedef Değişkene ait Bilgilerin Edinilmesi
 
+```pyhton
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 plt.figure(figsize=(14, 5))
-
 plt.subplot(1, 2, 1)
 sns.histplot(df_cleaned['ArrDelay'], bins=100, kde=True, color='steelblue')
 plt.title('ArrDelay Dağılımı')
-
 plt.subplot(1, 2, 2)
 sns.boxplot(x=df['ArrDelay'], color='orange')
 plt.title('ArrDelay Boxplot')
-
 plt.tight_layout()
 plt.show()
+```
 
 ![Hedef Değişken Keşif Grafikleri](hedefdegiskengrafikler.png)
 
 
 ***Hedef Değişkenin Uç Değerlerinin Tespiti ve Temizlenmesi***
 
+
+```pyhton
 initial_count = df_cleaned.shape[0]
-
 df_filtered = df_cleaned[df_cleaned['ArrDelay'] <= 250]
-
 filtered_count = df_filtered.shape[0]
-
 outliers_removed = initial_count - filtered_count
 
 print(f"Çıkarılan uç değer sayısı (ArrDelay > 250): {outliers_removed}")
-
 print(f"Kalan veri sayısı: {filtered_count}")
-
 print("Eksik veri var mı?:", df_filtered.isnull().sum().sum())
+```
 
 Çıkarılan uç değer sayısı (ArrDelay > 250): 20682
 Kalan veri sayısı: 1226804
@@ -72,12 +67,10 @@ Uç değer analizinde, ArrDelay (varış gecikmesi) değişkeni için gecikmeler
 
 ***Hedef Değişken ile Özelliklerin İlişkisinin İncelenmesi***
 
+```pyhton
 null_cols = ['Month', 'DayofMonth', 'Year', 'DayOfWeek', 'DepTime', 'CRSDepTime', 'ArrTime', 'CRSArrTime', 'Diverted', 'Cancelled', 'Unnamed: 0' ]
-
 binary_cols = [col for col in df_filtered.columns if df_filtered[col].nunique() == 2]
-
 numeric_cols = df_filtered.select_dtypes(include=['int64', 'float64']).columns.tolist()
-
 cols_to_use = [col for col in numeric_cols if col not in null_cols + binary_cols]
 
 
@@ -92,10 +85,9 @@ print(corr_matrix['ArrDelay'].sort_values(ascending=False))
 plt.figure(figsize=(12, 8))
 
 sns.heatmap(corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
-
 plt.title('Korelasyon Matrisi (Isı Haritası)')
-
 plt.show()
+```
 
 ![Korelasyon Isı Matrisi](korelasyonısımatris.png)
 
@@ -104,22 +96,19 @@ Korelasyon analizi yapılırken öncelikle, null_cols adlı liste oluşturulmuş
 
 ***Düşük İlişkili Özelliklerin Temizlenmesi***
 
+```pyhton
 selected_features = [
     'DepDelay', 'LateAircraftDelay', 'NASDelay', 'CarrierDelay',
     'TaxiOut', 'WeatherDelay', 'TaxiIn', 'ArrDelay' ]
 
 all_columns = df_cleaned.columns.tolist()
-
 columns_to_drop = [col for col in all_columns if col not in selected_features]
-
 df_selected = df_cleaned.drop(columns=columns_to_drop)
 
 print("Çıkarılan sütunlar:", columns_to_drop)
-
 print("Yeni veri seti sütunları:", df_selected.columns.tolist())
-
 print("Yeni df_cleaned boyutu:", df_selected.shape)
-
+```
 
 Çıkarılan sütunlar: ['Unnamed: 0', 'Year', 'Month', 'DayofMonth', 'DayOfWeek', 'DepTime', 'CRSDepTime', 'ArrTime', 'CRSArrTime', 'UniqueCarrier', 'FlightNum', 'TailNum', 'ActualElapsedTime', 'CRSElapsedTime', 'AirTime', 'Origin', 'Dest', 'Distance', 'Cancelled', 'CancellationCode', 'Diverted', 'SecurityDelay']
 Yeni veri seti sütunları: ['ArrDelay', 'DepDelay', 'TaxiIn', 'TaxiOut', 'CarrierDelay', 'WeatherDelay', 'NASDelay', 'LateAircraftDelay']
@@ -127,30 +116,27 @@ Yeni df_cleaned boyutu: (1247486, 8)
 
 # Veri Ön İşleme/Özellik Mühendisliği - Hedef Değişkenin Kategorilere Ayrılması
 
+```pyhton
 df_selected['ArrDelay_raw'] = df_selected['ArrDelay']
-
 def delay_class_4_v2(x):
 
     if x <= 30: 
-    
-        return 1  # Kısa gecikme
+       return 1  # Kısa gecikme
         
     elif x <= 50:
-    
-        return 2  # Orta gecikme
+       return 2  # Orta gecikme
         
     elif x <= 80:
-    
-        return 3  # Uzun gecikme
+       return 3  # Uzun gecikme
         
     else:
-    
-        return 4  # Çok uzun gecikme
+      return 4  # Çok uzun gecikme
 
 df_selected['DelayClass'] = df_selected['ArrDelay'].apply(delay_class_4_v2)
 
 print("Gecikme sınıflarına göre veri dağılımı:")
 print(df_selected['DelayClass'].value_counts())
+```
 
 0 ile 30 dakika arası gecikmeler kısa gecikme olarak kabul edilmiş ve 1. sınıf olarak tanımlanmıştır. Bu aralık, yolcuların çoğunlukla kabul edilebilir bulduğu hafif gecikmeleri temsil eder. Bu kategoride 417.008 veri bulunmaktadır.
 
@@ -162,10 +148,10 @@ print(df_selected['DelayClass'].value_counts())
 
 # x-y değerlerinin tanımlanması ve eğitim/test kümesi ayrımı
 
+```pyhton
 from sklearn.model_selection import train_test_split
 
 Bağımsız değişkenler
-
 X = df_selected[['ArrDelay', 'DepDelay', 'TaxiIn', 'TaxiOut', 'CarrierDelay', 'WeatherDelay', 'NASDelay', 'LateAircraftDelay']]
 
  Hedef değişken
@@ -178,83 +164,70 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 print(f"Eğitim seti boyutu: {X_train.shape[0]} örnek")
-
 print(f"Test seti boyutu: {X_test.shape[0]} örnek")
+```
 
 # Veri Ön İşleme - Normalizasyon
 
+```pyhton
 from sklearn.preprocessing import StandardScaler
-
-
 scaler = StandardScaler()
 
 X_train_scaled = scaler.fit_transform(X_train)
-
 X_test_scaled = scaler.transform(X_test)
 
 import pandas as pd
 
 X_train_scaled = pd.DataFrame(X_train_scaled, columns=X_train.columns, index=X_train.index)
-
 X_test_scaled = pd.DataFrame(X_test_scaled, columns=X_test.columns, index=X_test.index)
+```
 
 Modelin farklı ölçeklerdeki özelliklerden kaynaklanan yanlılıklardan korunmasını sağlamak ve modelin daha dengeli öğrenmesi amaçlanarak Standart Scaler ile veriseti normalize edilmiştir. Önce yalnızca eğitim verisine fit edilerek, ortalama ve standart sapma hesaplanır; ardından bu istatistikler kullanılarak hem eğitim hem de test verisi dönüştürülmüştür. Böylece her özellik, ortalaması 0 ve standart sapması 1 olacak şekilde yeniden ölçeklenmiştir.Modelin gerçek dünyadaki performansının doğru ölçülmesi amacı ile test verisi için ayrıca fit edilmemiştir
 
 # Logistic Regression Kullanılarak Modelin Oluşturulması 
 
+```pyhton
 from sklearn.linear_model import LogisticRegression
-
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 
 model = LogisticRegression(class_weight='balanced', max_iter=1000, random_state=42)
-
 model.fit(X_train_scaled, y_train)
 
 y_pred = model.predict(X_test_scaled)
+```
 
 # Modelin Değerlendirilmesi
 
+```pyhton
 from sklearn.pipeline import make_pipeline
-
 from sklearn.preprocessing import MinMaxScaler
-
 from sklearn.linear_model import LogisticRegression
-
 from sklearn.model_selection import StratifiedKFold, cross_val_score, train_test_split
-
 from sklearn.metrics import confusion_matrix, classification_report
 
 pipeline = make_pipeline(MinMaxScaler(), LogisticRegression(max_iter=1000, random_state=42, class_weight='balanced'))
 
 cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-
 cv_scores = cross_val_score(pipeline, X, y, cv=cv, scoring='accuracy', n_jobs=-1)
 
 print("Cross Validation Doğruluk Skorları:", cv_scores)
-
 print("Ortalama Doğruluk:", cv_scores.mean())
-
 print("Standart Sapma:", cv_scores.std())
 
 pipeline.fit(X_train, y_train)
-
-
 y_train_pred = pipeline.predict(X_train)
 
 print("\nEğitim Seti Performansı:")
-
 print("Confusion Matrix:\n", confusion_matrix(y_train, y_train_pred))
-
 print("Classification Report:\n", classification_report(y_train, y_train_pred))
 
 y_test_pred = pipeline.predict(X_test)
 
 print("\nTest Seti Performansı:")
-
 print("Confusion Matrix:\n", confusion_matrix(y_test, y_test_pred))
-
 print("Classification Report:\n", classification_report(y_test, y_test_pred))
 
+```
 Cross Validation Doğruluk Skorları: [0.93327001 0.91560219 0.92250007 0.92319347 0.91925354]
 Ortalama Doğruluk: 0.9227638542587637
 Standart Sapma: 0.0059033059721381315
@@ -303,6 +276,7 @@ Sonuç olarak, model sınıflar arası dengeli bir şekilde yüksek performans s
 
 # Modelin Hiperparametre Optimizasyonu Kullanılarak Geliştirilmesi
 
+```pyhton
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import MinMaxScaler
@@ -318,6 +292,7 @@ grid_search.fit(X, y)
 
 print("En iyi parametreler:", grid_search.best_params_)
 print("En iyi doğruluk:", grid_search.best_score_)
+```
 
 Lojistik regresyon modelinin performansını artırmak için hiperparametre optimizasyonu yapıldı. Öncelikle veri ölçeklendirme için MinMaxScaler ve sınıflandırma için LogisticRegression yer alan bir pipeline oluşturuldı. Ardından, modelin önemli iki parametresi olan C (düzenleme gücü) ve max_iter (maksimum iterasyon sayısı) için farklı değerlerin denenmesi amacıyla bir parametre ızgarası (param_grid) belirlendi. GridSearchCV fonksiyonu, bu parametre kombinasyonlarını 5 katlı cross-validation (çapraz doğrulama) ile test edilerek, her biri için modelin doğruluk (accuracy) skoru hesaplandı ve en iyi sonucu veren parametreler belirlenmesi amaçlanmıştır.
 
@@ -327,6 +302,7 @@ C=10 değeri, modelin aşırı uyuma (overfitting'i önlemeye) daha az ağırlı
 
 # Optimum Modelin Sonuçlarının Değerlendirilmesi
 
+```pyhton
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, precision_score, recall_score, f1_score
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -338,29 +314,20 @@ y_pred = best_model.predict(X_test)
 cm = confusion_matrix(y_test, y_pred)
 
 plt.figure(figsize=(8,6))
-
 sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=best_model.classes_, yticklabels=best_model.classes_)
-
 plt.xlabel('Tahmin')
-
 plt.ylabel('Gerçek')
-
 plt.title('Karışıklık Matrisi')
-
 plt.show()
 
 Performans metrikleri
 print("Doğruluk (Accuracy):", accuracy_score(y_test, y_pred))
-
 print("Kesinlik (Precision) (macro):", precision_score(y_test, y_pred, average='macro'))
-
 print("Duyarlılık (Recall) (macro):", recall_score(y_test, y_pred, average='macro'))
-
 print("F1 Skoru (macro):", f1_score(y_test, y_pred, average='macro'))
-
 print("\nClassification Report:\n")
-
 print(classification_report(y_test, y_pred, digits=4))
+```
 
 ![Model Karışıklık Matrisi](modelperformans.png) 
 
