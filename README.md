@@ -45,7 +45,7 @@ plt.title('ArrDelay Boxplot')
 plt.tight_layout()
 plt.show()
 
-! (hedefdegiskengrafikler.png)
+! [Hedef Değişken Keşif Grafikleri] (hedefdegiskengrafikler.png)
 
 
 ***Hedef Değişkenin Uç Değerlerinin Tespiti ve Temizlenmesi***
@@ -97,7 +97,7 @@ plt.title('Korelasyon Matrisi (Isı Haritası)')
 
 plt.show()
 
-!(korelasyonısımatris.png)
+![Korelasyon Isı Matrisi](korelasyonısımatris.png)
 
 
 Korelasyon analizi yapılırken öncelikle, null_cols adlı liste oluşturulmuş ve içine zamanla ilgili sütunlar (Month, DayofMonth, Year, DayOfWeek, DepTime, CRSDepTime, ArrTime, CRSArrTime) ile ayrıca modelde anlamlı katkısı olmayabilecek ve analiz dışı bırakılmak istenen Diverted, Cancelled ve indeks görevi gören Unnamed: 0 sütunları eklenmiştir. Bu özellikler korelasyon analizinden çıkarılarak model karmaşasının önüne geçilmek ve anlamlı korelasyonlar elde etmek amaçlanmıştır. Sonrasında, veri içindeki ikili (binary) sütunlar binary_cols olarak tespit edilerek korelasyon analizinde yanıltıcı sonuç alınmasının önüne geçilmiştir. Daha sonra tüm sayısal sütunlar (numeric_cols) seçilmiş ve null_cols ile binary_cols listelerindeki sütunlar çıkarılarak, korelasyonda kullanılacak sütunlar (cols_to_use) oluşturulmuştur. Böylece zamanla ilgili, binary ve gereksiz sütunlar analiz dışında bırakılmıştır. . Kalan sayısal sütunlar arasında korelasyon matrisi hesaplanıp ArrDelay ile olan korelasyonlar yazdırılmış ve görselleştirilmiştir.
@@ -362,7 +362,7 @@ print("\nClassification Report:\n")
 
 print(classification_report(y_test, y_pred, digits=4))
 
-! (modelperformans.png) 
+! [Model Karışıklık Matrisi](modelperformans.png) 
 
 Doğruluk (Accuracy): 0.962653007238535
 
