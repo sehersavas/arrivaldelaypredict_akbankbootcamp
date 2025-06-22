@@ -45,7 +45,7 @@ plt.title('ArrDelay Boxplot')
 plt.tight_layout()
 plt.show()
 
-! [Hedef Değişken Keşif Grafikleri] (hedefdegiskengrafikler.png)
+![Hedef Değişken Keşif Grafikleri](hedefdegiskengrafikler.png)
 
 
 ***Hedef Değişkenin Uç Değerlerinin Tespiti ve Temizlenmesi***
@@ -362,7 +362,7 @@ print("\nClassification Report:\n")
 
 print(classification_report(y_test, y_pred, digits=4))
 
-! [Model Karışıklık Matrisi](modelperformans.png) 
+![Model Karışıklık Matrisi](modelperformans.png) 
 
 Doğruluk (Accuracy): 0.962653007238535
 
@@ -387,8 +387,5 @@ Classification Report:
 weighted avg     0.9634    0.9627    0.9629    249498
 
 
-```python
-
-```
 [Kaggle Proje Linkim](https://www.kaggle.com/code/sehersava/flight-delay-predict-ml)
  
