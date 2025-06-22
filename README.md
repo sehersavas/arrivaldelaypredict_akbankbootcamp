@@ -354,7 +354,8 @@ Classification Report:
 weighted avg     0.9634    0.9627    0.9629    249498
 
 
-```
+
+
 Bu çalışmada, havayolu gecikmelerini sınıflandırmak üzere MinMax normalizasyonu ve L2 düzenlemeli Logistic Regression algoritmasından oluşan bir pipeline oluşturulmuştur. Hiperparametre optimizasyonu sonucu elde edilen model, test veri setinde %96,2 doğruluk oranı ve dengeli sınıflandırma başarısı göstermiştir.
 
 Karışıklık matrisi ve sınıf bazlı metrikler incelendiğinde, özellikle Sınıf 1 ve Sınıf 4 için yüksek kesinlik (precision) ve duyarlılık (recall) değerleri elde edilmiştir. Model, sınıf dengesizliğine rağmen başarılı performans sergileyerek tüm sınıflarda tutarlı tahminler yapabilmektedir.
@@ -362,7 +363,7 @@ Karışıklık matrisi ve sınıf bazlı metrikler incelendiğinde, özellikle S
 Modelin tahmin olasılıklarının dağılımı da güçlü sınıf ayrımlarına işaret etmekte, bu da operasyonel karar süreçlerinde güvenilirliğini artırmaktadır. Havayolu şirketleri, bu model sayesinde gecikme riski yüksek uçuşları önceden tespit ederek kaynaklarını daha etkin yönetebilir.
 
 Gelecekte modelin performansını artırmak için farklı algoritmalarla karşılaştırmalar yapılması, sınıf dengesizliği tekniklerinin (örneğin SMOTE) uygulanması ve gerçek zamanlı tahmin sistemleri geliştirilmesi üzerine çalışılabilir. Ayrıca zaman serisi verilerinin entegrasyonu ile modelin kapsayıcılığı ve doğruluğu daha da artırılabilir.
-```
+
 
 [Kaggle Proje Linkim](https://www.kaggle.com/code/sehersava/flight-delay-predict-ml)
  
